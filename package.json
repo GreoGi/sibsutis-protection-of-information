@@ -1,0 +1,43 @@
+{
+  "name": "sibsutis-protection-of-information",
+  "version": "1.0.0",
+  "description": "This repository was made for my educational subject, called \"Protection of information\" in Sibsutis.\r Lecturer is Rakitskiy A. A.",
+  "scripts": {
+    "start": "webpack-dev-server --open --mode development --no-inline",
+    "build": "webpack --mode production",
+    "tsc": "tsc --init"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GreoGi/sibsutis-protection-of-information.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GreoGi/sibsutis-protection-of-information/issues"
+  },
+  "homepage": "https://github.com/GreoGi/sibsutis-protection-of-information#readme",
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/plugin-syntax-bigint": "^7.4.4",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.6.0",
+    "@types/node": "^12.7.5",
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.0.6",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "typescript": "^3.6.3",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "dependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}
