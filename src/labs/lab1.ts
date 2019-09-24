@@ -1,3 +1,7 @@
+/**
+ * Ограничение на размер a,b,p в a^b % p
+ * Ограничение задано условиями 1ой лабораторной
+ */
 const LIMIT = 10 ** 9;
 
 /**
@@ -29,7 +33,7 @@ export function gcd(a: bigint, b: bigint): bigint {
 
 /**
  * Расширенный алгоритм Евклида для двух чисел. Итеративный
- * НОД(a, b) = ax + by. Всякое там соотношение Безу, коэфициенты Безу
+ * НОД(a, b) = ax + by. Всякое там соотношение Безу, коэфициенты Безу, вычисление инверсии числа по модулю
  * @param a целое число
  * @param b целое число
  * @returns [ НОД(a, b), x, y ]
@@ -59,6 +63,112 @@ export function extendedGcd(a: bigint, b: bigint): bigint[] {
   return U;
 }
 
+export class DiffieHellman {
+  // Безопасное простое число вида P = 2Q + 1, где Q - число Софи Жермен
+  P: bigint;
+  // Первообразный корень по модулю P
+  g: bigint;
+  constructor() {
+    let tempP: bigint;
+    let tempg: bigint;
+
+    do {
+      tempP = bigintRandom_odd(LIMIT);
+    } while (!isSafePrime(tempP));
+
+    this.P = tempP;
+    do {
+      tempg = bigintRandom(2, Number(tempP) - 2);
+    } while (!isAntiderivativeRoot_simple(tempg, this.P));
+
+    this.g = tempg;
+    // console.log('P: ', this.P, 'g: ', this.g)
+  }
+
+  /**
+   * Генерирует закрытый ключ 1 <= Xi < P
+   * @returns 1 <= Xi < P
+   */
+  generatePrivateKey = (): bigint => {
+    return bigintRandom(1, Number(this.P -1n));
+  }
+
+  /**
+   * Генерирует открытй ключ на основе закрытого с помощью g^Xi % P = Yi
+   * @param privateKey - закрытый ключ вида 1 <= Xi < P
+   * @returns Yi
+   */
+  generatePublicKey = (privateKey: bigint): bigint => {
+    if(privateKey > this.P - 1n) {
+      throw 'privateKey is too big!';
+    }
+    if(privateKey < 1n) {
+      throw 'privateKey is too small!';
+    }
+    return powByMod(this.g, privateKey, this.P);
+  }
+
+  generateSharedKey = (publicKey: bigint, privateKey: bigint): bigint => {
+    if(privateKey > this.P - 1n) {
+      throw 'privateKey is too big!';
+    }
+    if(privateKey < 1n) {
+      throw 'privateKey is too small!';
+    }
+    if (publicKey > this.P - 1n) {
+      throw 'invalid publicKey!';
+    }
+    return powByMod(publicKey, privateKey, this.P);
+  }
+}
+
+/**
+ * Трудоёмкая ф-ия вычисления x'а, зная основание a, результат y и модуль p
+ * в a^x %p = y
+ * @param y результат возведения в степень по модулю
+ * @param a основание
+ * @param p модуль
+ * @returns x такой, что a^x % p = y
+ */
+export function babyStepGiantStep(y: bigint, a: bigint, p: bigint): bigint {
+  const m = bigintSqrt(p) + 1n;
+  let ajy = [];
+  let am = [];
+  for (let j = 0n; j < m; j++) {
+    ajy.push({ j, value: (powByMod(a, j, p) * powByMod(y, 1n, p)) % p});
+  }
+  for (let i = 1n; i <= m; i++) {
+    am.push({ i, value: powByMod(a, i*m, p)});
+  }
+  // console.log(am, ajy);
+  // debugger;
+  am.sort((a, b) => {
+    return Number(a.value - b.value);
+  });
+  ajy.sort((a, b) => {
+    return Number(a.value - b.value);
+  });
+  // console.log(am, ajy);
+  // debugger;
+  let j = 0;
+  let i = 0;
+  let result = 0n;
+  while(i < m || j < m) {
+    if (am[i].value < ajy[j].value) {
+      i++;
+    } else if (am[i].value > ajy[j].value) {
+      j++;
+    } else {
+      result = am[i].i * m - ajy[j].j;
+      // debugger
+      break
+    }
+  }
+  return result;
+}
+
+//=== UTILS ===//
+
 /**
  * Ф-ия генерит случайное число в диапазоне от min до max
  * @param max конец диапазона (до 2^53), потому что не bigint, а тащить ещё одну зависимость мне влом
@@ -86,7 +196,7 @@ export function bigintRandom_odd(max: number): bigint {
  * @param a целое число для проверки
  * @returns boolean
  */
-function isPrime_bySqrt(a: bigint): boolean {
+export function isPrime_bySqrt(a: bigint): boolean {
   if (a <= 1n) {
     return false;
   }
@@ -148,7 +258,7 @@ export function isSafePrime(a: bigint): boolean {
  * @param value большое целое
  * @returns sqrt(value)
  */
-function bigintSqrt(value: bigint): bigint {
+export function bigintSqrt(value: bigint): bigint {
   if (value < 0n) {
     throw 'square root of negative numbers is not supported'
   }
@@ -202,39 +312,4 @@ export function isAntiderivativeRoot_simple(a: bigint, p: bigint): boolean {
     return false
   }
   return true;
-}
-
-export class DiffieHellman {
-  // Безопасное простое число вида P = 2Q + 1, где Q - число Софи Жермен
-  P: bigint;
-  // Первообразный корень по модулю P
-  g: bigint;
-  constructor() {
-    let tempP: bigint;
-    let tempg: bigint;
-
-    do {
-      tempP = bigintRandom_odd(LIMIT);
-    } while (!isSafePrime(tempP));
-
-    this.P = tempP;
-    do {
-      tempg = bigintRandom(2, Number(tempP) - 2);
-    } while (!isAntiderivativeRoot_simple(tempg, this.P));
-
-    this.g = tempg;
-    // console.log('P: ', this.P, 'g: ', this.g)
-  }
-
-  generatePrivateKey = (): bigint => {
-    return bigintRandom(1, Number(this.P -1n));
-  }
-
-  generatePublicKey = (privateKey: bigint): bigint => {
-    return powByMod(this.g, privateKey, this.P);
-  }
-
-  generateSharedKey = (publicKey: bigint, privateKey: bigint): bigint => {
-    return powByMod(publicKey, privateKey, this.P);
-  }
 }
