@@ -37,6 +37,8 @@
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
+    "@skbkontur/react-ui": "^1.3.0",
+    "@skbkontur/react-ui-validations": "^1.0.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   }
