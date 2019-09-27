@@ -73,7 +73,7 @@ export class DiffieHellman {
     let tempg: bigint;
 
     do {
-      tempP = bigintRandom_odd(LIMIT);
+      tempP = bigintRandom_odd(5, LIMIT);
     } while (!isSafePrime(tempP));
 
     this.P = tempP;
@@ -152,19 +152,16 @@ export function babyStepGiantStep(y: bigint, a: bigint, p: bigint): bigint {
   // debugger;
   let j = 0;
   let i = 0;
-  let result = 0n;
   while(i < m || j < m) {
     if (am[i].value < ajy[j].value) {
       i++;
     } else if (am[i].value > ajy[j].value) {
       j++;
     } else {
-      result = am[i].i * m - ajy[j].j;
-      // debugger
-      break
+      return am[i].i * m - ajy[j].j;
     }
   }
-  return result;
+  return 0n;
 }
 
 //=== UTILS ===//
@@ -185,9 +182,10 @@ export function bigintRandom(min: number, max: number): bigint {
  * @param max конец диапазона (до 2^53), потому что не bigint, а тащить ещё одну зависимость мне влом
  * @returns случайное большое целое в диапазоне от 1 до max
  */
-export function bigintRandom_odd(max: number): bigint {
-  let half = max / 2;
-  let rand = 1 + 2 * Math.floor(Math.random() * (half));
+export function bigintRandom_odd(min: number, max: number): bigint {
+  let half = (max - min + 1) / 2;
+  min = min & (~1);
+  let rand = min + 1 + 2 * Math.floor(Math.random() * (half));
   return BigInt(rand);
 }
 
