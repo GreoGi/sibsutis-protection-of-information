@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This repository was made for my educational subject, called \"Protection of information\" in Sibsutis.\r Lecturer is Rakitskiy A. A.",
   "scripts": {
-    "start": "webpack-dev-server --open --mode development --no-inline",
+    "start": "webpack-dev-server --open --mode development",
     "build": "webpack --mode production",
     "tsc": "tsc --init"
   },
@@ -27,6 +27,8 @@
     "@types/node": "^12.7.5",
     "@types/react": "^16.9.2",
     "@types/react-dom": "^16.9.0",
+    "@types/react-router": "^5.1.1",
+    "@types/react-router-dom": "^5.1.0",
     "awesome-typescript-loader": "^5.2.1",
     "babel-loader": "^8.0.6",
     "html-loader": "^0.5.5",
@@ -37,7 +39,14 @@
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
+    "@anissoft/box": "^1.2.0",
+    "@anissoft/react-helpers": "^1.5.4",
+    "@material-ui/core": "^4.4.3",
+    "@material-ui/icons": "^4.4.3",
+    "clsx": "^1.0.4",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react-dom": "^16.9.0",
+    "react-router": "^5.1.1",
+    "react-router-dom": "^5.1.1"
   }
 }
