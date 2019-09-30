@@ -1,5 +1,17 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import App from './components/App';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { BrowserRouter } from 'react-router-dom';
+import App from './layout/App';
 
-render(<App />, document.getElementById('root'));
+
+render((
+  <>
+    <CssBaseline />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </>
+  ),
+  document.getElementById('root')
+);
