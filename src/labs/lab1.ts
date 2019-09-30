@@ -2,7 +2,7 @@
  * Ограничение на размер a,b,p в a^b % p
  * Ограничение задано условиями 1ой лабораторной
  */
-const LIMIT = 10 ** 9;
+export const LIMIT = 10 ** 9;
 
 /**
  * Алгоритм быстрого возведения в степень по модулю
@@ -184,8 +184,8 @@ export function bigintRandom(min: number, max: number): bigint {
  */
 export function bigintRandom_odd(min: number, max: number): bigint {
   let half = (max - min + 1) / 2;
-  min = min & (~1);
-  let rand = min + 1 + 2 * Math.floor(Math.random() * (half));
+  min = min | 1;
+  let rand = min + 2 * Math.floor(Math.random() * (half));
   return BigInt(rand);
 }
 
